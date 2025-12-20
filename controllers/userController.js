@@ -1,5 +1,7 @@
 const db = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 exports.signup = (req, res) => {
     const { name, email, password } = req.body;
@@ -39,6 +41,46 @@ exports.signup = (req, res) => {
                 message: "User registered successfully",
                 userId: this.lastID
             });
+        });
+    });
+};
+
+exports.login = (req, res) => {
+    const { email, password } = req.body;
+
+    // Basic validation
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    const findUserQuery = `SELECT * FROM users WHERE email = ?`;
+
+    db.get(findUserQuery, [email], (err, user) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+
+        // Compare password with hashed password
+        const isMatch = bcrypt.compareSync(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            "secretkey",
+            { expiresIn: "1h" }
+        );
+
+        return res.status(200).json({
+            message: "Login successful",
+            token: token
         });
     });
 };
