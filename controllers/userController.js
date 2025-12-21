@@ -84,3 +84,15 @@ exports.login = (req, res) => {
         });
     });
 };
+
+exports.getAllUsers = (req, res) => {
+    const query = `SELECT id, name, email FROM users`;
+
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
+
+        return res.status(200).json(rows);
+    });
+};
