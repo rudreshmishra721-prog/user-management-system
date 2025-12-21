@@ -9,6 +9,9 @@ router.post('/signup', userController.signup);
 // Login route
 router.post('/login', userController.login);
 
+// Create user (Protected)
+router.post('/create', authMiddleware, userController.createUser);
+
 // Protected route - get all users
 router.get('/all', authMiddleware, userController.getAllUsers);
 
