@@ -18,6 +18,9 @@ router.get('/all', authMiddleware, userController.getAllUsers);
 // Update user (Protected)
 router.put('/update/:id', authMiddleware, userController.updateUser);
 
+// Delete user (Protected)
+router.delete('/delete/:id', authMiddleware, userController.deleteUser);
+
 module.exports = router;
 
 

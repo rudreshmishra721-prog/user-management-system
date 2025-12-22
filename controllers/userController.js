@@ -156,6 +156,24 @@ exports.updateUser = (req, res) => {
     });
 };
 
+exports.deleteUser = (req, res) => {
+    const userId = req.params.id;
+
+    const query = `DELETE FROM users WHERE id = ?`;
+
+    db.run(query, [userId], function (err) {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
+
+        if (this.changes === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({ message: "User deleted successfully" });
+    });
+};
+
 
 
 
