@@ -15,6 +15,9 @@ router.post('/create', authMiddleware, userController.createUser);
 // Protected route - get all users
 router.get('/all', authMiddleware, userController.getAllUsers);
 
+// Update user (Protected)
+router.put('/update/:id', authMiddleware, userController.updateUser);
+
 module.exports = router;
 
 

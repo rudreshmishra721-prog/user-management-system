@@ -123,5 +123,39 @@ exports.getAllUsers = (req, res) => {
     });
 };
 
+exports.updateUser = (req, res) => {
+    const userId = req.params.id;
+    const { name, email, password } = req.body;
+
+    if (!name || !email) {
+        return res.status(400).json({ message: "Name and email are required" });
+    }
+
+    let query = "";
+    let params = [];
+
+    if (password) {
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        query = `UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?`;
+        params = [name, email, hashedPassword, userId];
+    } else {
+        query = `UPDATE users SET name = ?, email = ? WHERE id = ?`;
+        params = [name, email, userId];
+    }
+
+    db.run(query, params, function (err) {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
+
+        if (this.changes === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({ message: "User updated successfully" });
+    });
+};
+
+
 
 
