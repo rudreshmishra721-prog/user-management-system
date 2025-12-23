@@ -54,8 +54,27 @@ loadUsersBtn.addEventListener("click", async () => {
 
         users.forEach(user => {
             const li = document.createElement("li");
-            li.innerText = `${user.id} - ${user.name} (${user.email})`;
-            userList.appendChild(li);
+            li.innerText = `${user.id} - ${user.name} (${user.email}) `;
+
+            const delBtn = document.createElement("button");
+            delBtn.innerText = "Delete";
+
+            delBtn.onclick = async () => {
+              const token = localStorage.getItem("token");
+
+    await fetch(`http://localhost:3000/api/users/delete/${user.id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    alert("User deleted");
+};
+
+li.appendChild(delBtn);
+userList.appendChild(li);
+
         });
 
     } catch (error) {
@@ -63,3 +82,30 @@ loadUsersBtn.addEventListener("click", async () => {
     }
 });
 
+const createUserForm = document.getElementById("createUserForm");
+
+createUserForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Please login first");
+        return;
+    }
+
+    const name = document.getElementById("newName").value;
+    const email = document.getElementById("newEmail").value;
+    const password = document.getElementById("newPassword").value;
+
+    const response = await fetch("http://localhost:3000/api/users/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await response.json();
+    alert(data.message);
+});
