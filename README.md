@@ -3,12 +3,11 @@
 A full-stack User Management System built using Node.js, Express, SQLite, and vanilla JavaScript.
 
 ## Features
-- User Signup & Login
-- JWT-based Authentication
-- Protected APIs
-- Create, Read, Update, Delete (CRUD) users
-- Secure password hashing using bcrypt
-- Simple frontend dashboard
+- User authentication using JWT
+- Role-based authorization (Admin/User)
+- Admin-only user management (Create/Delete)
+- Secure password hashing with bcrypt
+- SQLite database
 
 ## Tech Stack
 - Backend: Node.js, Express
