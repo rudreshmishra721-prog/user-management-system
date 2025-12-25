@@ -1,26 +1,23 @@
 const express = require('express');
 const router = express.Router();
+
+// controllers
 const userController = require('../controllers/userController');
+
+// middlewares
 const authMiddleware = require('../middleware/authMiddleware');
+const isAdmin = require('../middleware/isAdmin');
 
-// Signup route
+// PUBLIC ROUTES
 router.post('/signup', userController.signup);
-
-// Login route
 router.post('/login', userController.login);
 
-// Create user (Protected)
-router.post('/create', authMiddleware, userController.createUser);
-
-// Protected route - get all users
+// PROTECTED ROUTES
 router.get('/all', authMiddleware, userController.getAllUsers);
-
-// Update user (Protected)
 router.put('/update/:id', authMiddleware, userController.updateUser);
 
-// Delete user (Protected)
-router.delete('/delete/:id', authMiddleware, userController.deleteUser);
+// ADMIN ONLY ROUTES
+router.post('/create', authMiddleware, isAdmin, userController.createUser);
+router.delete('/delete/:id', authMiddleware, isAdmin, userController.deleteUser);
 
 module.exports = router;
-
-

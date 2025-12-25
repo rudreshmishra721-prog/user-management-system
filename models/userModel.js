@@ -14,8 +14,11 @@ db.run(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         email TEXT UNIQUE,
-        password TEXT
+        password TEXT,
+        role TEXT DEFAULT 'user'
     )
 `);
+
+
 
 module.exports = db;
